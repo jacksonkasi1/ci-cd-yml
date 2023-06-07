@@ -1,0 +1,36 @@
+# define all stages:
+stages:
+    - deploy
+
+# define variables
+variables:
+    RAILWAY_TOKEN: "$RAILWAY_TOKEN"
+
+# deploy
+deploy-railway:
+    stage: deploy
+
+    # os:
+    image: ubuntu
+
+    # target branch's to push to deploy code:
+    only:
+        - integration
+
+    # define cache
+    cache:
+        paths:
+            - ~/.railway
+
+    # add before_script
+    before_script:
+        # install curl
+        - apt-get update && apt-get install -y curl
+        # install railway
+        - curl -fsSL https://railway.app/install.sh | sh
+
+    # run script:
+    script:
+        # deploy on railway
+        - echo "Deploying application..."
+        - RAILWAY_TOKEN="$RAILWAY_TOKEN" railway up
